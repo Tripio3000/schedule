@@ -2,8 +2,12 @@ package edu.iate.ism22.schedule.entity.user;
 
 import java.util.List;
 
+/**
+ * Варианты смен, которые может работать сотрудник.
+ */
 public interface ScheduleContainer {
     
-    WorkActivity getRandomWorkActivity();
-    List<WorkActivity> getAllWorkActivities();
+    WorkShift getRandomWorkShift();
+    
+    List<WorkShift> getAllWorkShifts();
 }

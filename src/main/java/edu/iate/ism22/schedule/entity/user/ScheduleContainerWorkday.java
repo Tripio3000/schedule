@@ -7,9 +7,9 @@ import java.util.Random;
 public class ScheduleContainerWorkday implements ScheduleContainer {
     
     private final Random rand;
-    private final List<WorkActivity> activities;
+    private final List<WorkShift> activities;
     
-    public ScheduleContainerWorkday(Random rand, List<WorkActivity> activities) {
+    public ScheduleContainerWorkday(Random rand, List<WorkShift> activities) {
         this.rand = rand;
         this.activities = activities;
     }
@@ -20,18 +20,13 @@ public class ScheduleContainerWorkday implements ScheduleContainer {
     }
     
     @Override
-    public WorkActivity getRandomWorkActivity() {
+    public WorkShift getRandomWorkShift() {
         int randomInt = rand.nextInt(activities.size());
         return activities.get(randomInt);
     }
     
     @Override
-    public List<WorkActivity> getAllWorkActivities() {
+    public List<WorkShift> getAllWorkShifts() {
         return activities;
     }
-    
-    public void addWorkActivity(WorkActivity wa) {
-        activities.add(wa);
-    }
-    
 }

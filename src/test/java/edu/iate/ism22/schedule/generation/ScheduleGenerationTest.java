@@ -63,8 +63,8 @@ class ScheduleGenerationTest extends ScheduleContextTestInitializer {
         
         SchedulePopulationProvider population = new SchedulePopulationProvider(
             users,
-            LocalDateTime.parse("2024-01-01T00:00"),
-            LocalDateTime.parse("2024-02-01T00:00"),
+            LocalDateTime.parse("2024-03-01T00:00"),
+            LocalDateTime.parse("2024-04-01T00:00"),
             fteService
         );
         

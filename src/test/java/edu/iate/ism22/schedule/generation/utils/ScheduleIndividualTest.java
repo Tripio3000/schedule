@@ -3,7 +3,7 @@ package edu.iate.ism22.schedule.generation.utils;
 import edu.iate.ism22.schedule.entity.genetic.ScheduleIndividual;
 import edu.iate.ism22.schedule.entity.genetic.ScheduleLine;
 import edu.iate.ism22.schedule.entity.user.Operator;
-import edu.iate.ism22.schedule.entity.user.Shift;
+import edu.iate.ism22.schedule.entity.user.ScheduleActivity;
 import edu.iate.ism22.schedule.entity.user.User;
 import edu.iate.ism22.schedule.generation.ScheduleContextTestInitializer;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,6 @@ import java.util.List;
 class ScheduleIndividualTest extends ScheduleContextTestInitializer {
     
     private ScheduleIndividual scheduleIndividual;
-    
     
     @Test
     void getScheduleLines() {
@@ -27,7 +26,8 @@ class ScheduleIndividualTest extends ScheduleContextTestInitializer {
             LocalDateTime.parse("2024-01-31T23:59")
         );
         
-        List<List<Shift>> scheduleLines = scheduleIndividual.getScheduleLines().stream().map(ScheduleLine::getScheduleLine).toList();
+        List<List<ScheduleActivity>> scheduleLines =
+            scheduleIndividual.getScheduleLines().stream().map(ScheduleLine::getScheduleLine).toList();
         System.out.println(scheduleLines);
     }
     

@@ -1,24 +1,26 @@
 package edu.iate.ism22.schedule.entity.user;
 
+import java.util.Collections;
 import java.util.List;
 
-import static java.time.LocalTime.parse;
-
+/**
+ * Смена для выходного дня. Содержит в себе смену с пустым списком активностей.
+ */
 public class ScheduleContainerDayOff implements ScheduleContainer {
     
-    private WorkActivity dayOffActivity;
+    private final WorkShift dayOffWorkShift;
     
     public ScheduleContainerDayOff() {
-        this.dayOffActivity = new WorkActivity(parse("00:00:00"), parse("00:00:00"), "dayOff", false);
+        this.dayOffWorkShift = new WorkShift(Collections.emptyList());
     }
     
     @Override
-    public WorkActivity getRandomWorkActivity() {
-        return dayOffActivity;
+    public WorkShift getRandomWorkShift() {
+        return dayOffWorkShift;
     }
     
     @Override
-    public List<WorkActivity> getAllWorkActivities() {
-        return List.of(dayOffActivity);
+    public List<WorkShift> getAllWorkShifts() {
+        return List.of(dayOffWorkShift);
     }
 }

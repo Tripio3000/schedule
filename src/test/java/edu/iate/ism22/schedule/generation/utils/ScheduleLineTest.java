@@ -2,7 +2,7 @@ package edu.iate.ism22.schedule.generation.utils;
 
 import edu.iate.ism22.schedule.entity.genetic.ScheduleLine;
 import edu.iate.ism22.schedule.entity.user.Operator;
-import edu.iate.ism22.schedule.entity.user.Shift;
+import edu.iate.ism22.schedule.entity.user.ScheduleActivity;
 import edu.iate.ism22.schedule.entity.user.User;
 import edu.iate.ism22.schedule.generation.ScheduleContextTestInitializer;
 import org.junit.jupiter.api.Test;
@@ -16,10 +16,10 @@ class ScheduleLineTest extends ScheduleContextTestInitializer {
     
     @Test
     void getScheduleLine() {
-        User user = new Operator("user1", scheme1by1);
+        User user = new Operator("user1", scheme2by2);
         scheduleLine = new ScheduleLine(user, LocalDateTime.parse("2024-01-01T00:00"), LocalDateTime.parse("2024-02-01T00:00"));
         
-        List<Shift> shifts = scheduleLine.getScheduleLine();
-        shifts.forEach(System.out::println);
+        List<ScheduleActivity> activities = scheduleLine.getScheduleLine();
+        activities.forEach(System.out::println);
     }
 }
