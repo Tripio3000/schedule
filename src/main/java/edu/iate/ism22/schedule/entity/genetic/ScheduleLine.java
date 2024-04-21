@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,6 +31,10 @@ public class ScheduleLine {
             cached = generateScheduleLine();
         }
         return cached;
+    }
+    
+    public void clearCache() {
+        cached = Collections.emptyList();
     }
     
     /**

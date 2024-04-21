@@ -14,7 +14,7 @@ import static edu.iate.ism22.schedule.generation.Constants.CROSSING_SKIP;
  */
 public interface Crossing {
     
-    void cross(List<ScheduleIndividual> population);
+    List<ScheduleIndividual> cross(List<ScheduleIndividual> population);
     
     default int skipIndividuals(int populationSize) {
         return (int) (populationSize * CROSSING_SKIP);

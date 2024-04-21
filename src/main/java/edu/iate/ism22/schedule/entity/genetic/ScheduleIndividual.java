@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 public class ScheduleIndividual {
@@ -31,7 +32,7 @@ public class ScheduleIndividual {
         if (cached.isEmpty()) {
             cached = users.stream()
                 .map(user -> new ScheduleLine(user, start, end))
-                .toList();
+                .collect(Collectors.toList());
         }
         return cached;
     }
