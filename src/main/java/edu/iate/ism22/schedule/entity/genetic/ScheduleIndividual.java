@@ -5,10 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Getter
@@ -18,32 +19,30 @@ public class ScheduleIndividual {
     private final LocalDateTime end;
     @Setter
     private Map<LocalDateTime, Integer> fte;
-    private List<ScheduleLine> cached;
+    private Map<User, ScheduleLine> cached;
     
     public ScheduleIndividual(List<User> users, LocalDateTime start, LocalDateTime end) {
         this.users = users;
         this.start = start;
         this.end = end;
         this.fte = new HashMap<>();
-        this.cached = new ArrayList<>();
+        this.cached = Collections.emptyMap();
     }
     
-    public List<ScheduleLine> getScheduleLines() {
+    public ScheduleIndividual(List<User> users, LocalDateTime start, LocalDateTime end, Map<User, ScheduleLine> cached) {
+        this.users = users;
+        this.start = start;
+        this.end = end;
+        this.fte = new HashMap<>();
+        this.cached = cached;
+    }
+    
+    public Map<User, ScheduleLine> getScheduleLines() {
         if (cached.isEmpty()) {
             cached = users.stream()
                 .map(user -> new ScheduleLine(user, start, end))
-                .collect(Collectors.toList());
+                .collect(Collectors.toMap(ScheduleLine::getUser, Function.identity()));
         }
         return cached;
     }
-    
-//    public Integer getFitnessScore() {
-//        if (fte.isEmpty()) {
-//            return Integer.MAX_VALUE;
-//        }
-//        Integer score = 0;
-//
-//        // на основе мапы fte считаем итоговую оценку индивида
-//        return score;
-//    }
 }

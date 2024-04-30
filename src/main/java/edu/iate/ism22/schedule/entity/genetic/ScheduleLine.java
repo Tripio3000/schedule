@@ -26,7 +26,7 @@ public class ScheduleLine {
     
     private List<ScheduleActivity> cached = new ArrayList<>();
     
-    public List<ScheduleActivity> getScheduleLine() {
+    public List<ScheduleActivity> getScheduleActivities() {
         if (cached.isEmpty()) {
             cached = generateScheduleLine();
         }

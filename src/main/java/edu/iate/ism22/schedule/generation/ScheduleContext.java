@@ -1,14 +1,15 @@
 package edu.iate.ism22.schedule.generation;
 
-import edu.iate.ism22.schedule.entity.genetic.Crossing;
 import edu.iate.ism22.schedule.entity.genetic.Fitness;
 import edu.iate.ism22.schedule.entity.genetic.Mutation;
 import edu.iate.ism22.schedule.entity.genetic.ScheduleIndividual;
 import edu.iate.ism22.schedule.entity.genetic.SchedulePopulationProvider;
-import edu.iate.ism22.schedule.entity.genetic.Selection;
 import edu.iate.ism22.schedule.entity.genetic.SimpleMutation;
-import edu.iate.ism22.schedule.entity.genetic.TournamentSelection;
-import edu.iate.ism22.schedule.entity.genetic.TwoPointsCrossing;
+import edu.iate.ism22.schedule.entity.genetic.crossing.Crossing;
+import edu.iate.ism22.schedule.entity.genetic.crossing.OnePointsCrossing;
+import edu.iate.ism22.schedule.entity.genetic.selection.Selection;
+import edu.iate.ism22.schedule.entity.genetic.selection.TournamentSelection;
+import edu.iate.ism22.schedule.generation.utils.ScheduleFTE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,10 +18,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static edu.iate.ism22.schedule.generation.Constants.CYCLES;
 import static edu.iate.ism22.schedule.generation.Constants.POPULATION_CAPACITY;
 
-//@RequiredArgsConstructor
 public class ScheduleContext {
     
     private final SchedulePopulationProvider schedulePopulationProvider;
@@ -28,13 +27,17 @@ public class ScheduleContext {
     private final Selection selection;
     private final Crossing crossing;
     private final Mutation mutation;
+    private final ScheduleFTE scheduleFTE;
     
     public ScheduleContext(SchedulePopulationProvider schedulePopulationProvider, Fitness fitness) {
         this.schedulePopulationProvider = schedulePopulationProvider;
         this.fitness = fitness;
+//        this.selection = new BestScoreSelection();
         this.selection = new TournamentSelection();
-        this.crossing = new TwoPointsCrossing();
+//        this.crossing = new SaveBestIndividsCrossing();
+        this.crossing = new OnePointsCrossing();
         this.mutation = new SimpleMutation();
+        this.scheduleFTE = new ScheduleFTE();
     }
     
     /**
@@ -65,11 +68,9 @@ public class ScheduleContext {
             }
         }
         
-        for (int i = 0; i < CYCLES; i++) {
+        for (int i = 0; i < 200; i++) {
             // 2. производим отбор и дополняем новыми индивидами популяцию
             List<ScheduleIndividual> bestIndividuals = selection.apply(scoredPopulation);
-//            List<ScheduleIndividual> selectedPopulation =
-//                completeFuture(schedulePopulationProvider.createIndividuals(bestIndividuals, POPULATION_CAPACITY));
             
             // 3. выполняем скрещивание
             List<ScheduleIndividual> newPopulation = crossing.cross(bestIndividuals);
@@ -77,17 +78,22 @@ public class ScheduleContext {
             // 4. выполняем мутацию
             mutation.apply(newPopulation);
             
-            // 5. вычисляем новые значения приспособленности
+            // 5. пересчет fte
+            newPopulation.forEach(ind -> ind.setFte(scheduleFTE.fteMatrix(ind)));
+            
+            // 6. вычисляем новые значения приспособленности
             Map<ScheduleIndividual, Integer> newScoredPopulation = new HashMap<>();
             for (ScheduleIndividual individual : newPopulation) {
                 newScoredPopulation.put(individual, fitness.getFitnessScore(individual));
             }
+            scoredPopulation = newScoredPopulation;
             
-            // 6. выводим итерацию и текущую приспособленность индивида
-            int sum = newScoredPopulation.values().stream()
+            // 7. выводим итерацию и текущую приспособленность индивида
+            int sum = scoredPopulation.values().stream()
                 .mapToInt(Integer::intValue)
                 .sum();
-            System.out.println("Iteration: " + i + ", score: " + sum);
+            Integer first = scoredPopulation.values().stream().sorted().toList().getFirst();
+            System.out.println("Iteration: " + i + ", score: " + sum + ", best: " + first);
         }
     }
     

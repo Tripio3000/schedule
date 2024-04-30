@@ -1,7 +1,9 @@
 package edu.iate.ism22.schedule.entity.genetic;
 
-import java.util.Collections;
+import edu.iate.ism22.schedule.entity.user.User;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class SimpleMutation implements Mutation {
@@ -14,15 +16,17 @@ public class SimpleMutation implements Mutation {
         if (rnd == null) {
             r = rnd = new Random();
         }
-        Collections.shuffle(population);
         
         int mutationAmount = skipIndividuals(population.size());
         for (int i = 0; i < mutationAmount; i++) {
-            List<ScheduleLine> scheduleLines = population.get(i).getScheduleLines();
+            Map<User, ScheduleLine> scheduleLines = population.get(i).getScheduleLines();
             int mutIdx = rnd.nextInt(scheduleLines.size());
             
             // Удаляем данные, сохраненные в cache. При следующем запросе будет сгенерирован новый набор ScheduleActivity.
-            scheduleLines.get(mutIdx).clearCache();
+            scheduleLines.values().stream()
+                .toList()
+                .get(mutIdx)
+                .clearCache();
         }
     }
 }

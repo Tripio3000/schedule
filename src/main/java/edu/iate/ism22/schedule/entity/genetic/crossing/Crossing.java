@@ -1,4 +1,6 @@
-package edu.iate.ism22.schedule.entity.genetic;
+package edu.iate.ism22.schedule.entity.genetic.crossing;
+
+import edu.iate.ism22.schedule.entity.genetic.ScheduleIndividual;
 
 import java.util.List;
 
@@ -13,6 +15,14 @@ import static edu.iate.ism22.schedule.generation.Constants.CROSSING_SKIP;
  * Если скрещивание не применяется, то копии обоих родителей переходят в следующее поколение без изменения.
  */
 public interface Crossing {
+    
+    /**
+     * Идеи (можно разделить на разные классы) :
+     * 1. Текущий способ с созданием полностью новой популяции, путем скрещивания индивидов, прошедших отбор.
+     * 2. Перенести без изменений в новую популяцию отбранных индивидов
+     *    (по сути надо добавить в коллекцию из аргумента еще индивидов, созданных путем скрещивания имеющихся)
+     * 3. Сначала скрестить между собой имеющиеся индивиды, потом создать новых из имеющихся.
+     */
     
     List<ScheduleIndividual> cross(List<ScheduleIndividual> population);
     

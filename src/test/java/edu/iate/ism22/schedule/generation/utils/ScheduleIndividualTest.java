@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class ScheduleIndividualTest extends ScheduleContextTestInitializer {
     
@@ -27,7 +28,7 @@ class ScheduleIndividualTest extends ScheduleContextTestInitializer {
         );
         
         List<List<ScheduleActivity>> scheduleLines =
-            scheduleIndividual.getScheduleLines().stream().map(ScheduleLine::getScheduleLine).toList();
+            scheduleIndividual.getScheduleLines().values().stream().map(ScheduleLine::getScheduleActivities).collect(Collectors.toList());
         System.out.println(scheduleLines);
     }
     

@@ -1,5 +1,7 @@
 package edu.iate.ism22.schedule.entity.genetic;
 
+import edu.iate.ism22.schedule.entity.genetic.crossing.Crossing;
+import edu.iate.ism22.schedule.entity.genetic.crossing.OnePointsCrossing;
 import edu.iate.ism22.schedule.entity.user.Operator;
 import edu.iate.ism22.schedule.entity.user.User;
 import edu.iate.ism22.schedule.generation.ScheduleContextTestInitializer;
@@ -12,12 +14,12 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-class TwoPointsCrossingTest extends ScheduleContextTestInitializer {
+class OnePointsCrossingTest extends ScheduleContextTestInitializer {
     
     @Test
     void cross() throws ExecutionException, InterruptedException {
         List<Future<ScheduleIndividual>> population = getPopulation();
-        Crossing crossing = new TwoPointsCrossing();
+        Crossing crossing = new OnePointsCrossing();
         
         List<ScheduleIndividual> resolved = new ArrayList<>();
         for (Future<ScheduleIndividual> future : population) {

@@ -19,7 +19,7 @@ class ScheduleLineTest extends ScheduleContextTestInitializer {
         User user = new Operator("user1", scheme2by2);
         scheduleLine = new ScheduleLine(user, LocalDateTime.parse("2024-01-01T00:00"), LocalDateTime.parse("2024-02-01T00:00"));
         
-        List<ScheduleActivity> activities = scheduleLine.getScheduleLine();
+        List<ScheduleActivity> activities = scheduleLine.getScheduleActivities();
         activities.forEach(System.out::println);
     }
 }

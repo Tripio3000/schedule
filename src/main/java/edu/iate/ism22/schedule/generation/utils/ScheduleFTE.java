@@ -16,10 +16,13 @@ public class ScheduleFTE {
     
     private static final long FIFTEEN_MIN = 900000L;
     
+    /**
+     * В мапу Map<Long, Integer> fifteenMinSum записывается сумма фте для каждой 15-минутки.
+     */
     public Map<LocalDateTime, Integer> fteMatrix(ScheduleIndividual scheduleIndividual) {
         
         Map<Long, Integer> fifteenMinSum = new HashMap<>();
-        scheduleIndividual.getScheduleLines().forEach(sl -> sumFte(sl, fifteenMinSum));
+        scheduleIndividual.getScheduleLines().values().forEach(sl -> sumFte(sl, fifteenMinSum));
         
         Map<LocalDateTime, Integer> matrix = HashMap.newHashMap(fifteenMinSum.size());
         fifteenMinSum.forEach((k, v) -> {
@@ -32,7 +35,7 @@ public class ScheduleFTE {
     }
     
     private void sumFte(ScheduleLine sl, Map<Long, Integer> sumFte) {
-        for (ScheduleActivity activity : sl.getScheduleLine()) {
+        for (ScheduleActivity activity : sl.getScheduleActivities()) {
             int isWork = activity.isWork() ? 1 : 0;
             long startShift = activity.getStart().toInstant(ZoneOffset.ofHours(3)).toEpochMilli();
             long endShift = activity.getEnd().toInstant(ZoneOffset.ofHours(3)).toEpochMilli();

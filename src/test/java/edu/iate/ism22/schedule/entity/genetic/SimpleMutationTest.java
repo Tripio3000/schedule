@@ -34,8 +34,7 @@ class SimpleMutationTest extends ScheduleContextTestInitializer {
         
         for (int i = 0; i < (int) (MUTATION_CHANCE * resolved.size()); i++) {
             
-            List<ScheduleLine> scheduleLines = resolved.getFirst().getScheduleLines();
-            
+            List<ScheduleLine> scheduleLines = resolved.getFirst().getScheduleLines().values().stream().toList();
             BitSet bitSet = new BitSet(scheduleLines.size());
             for (int j = 0; j < scheduleLines.size(); j++) {
                 ScheduleLine line = scheduleLines.get(j);

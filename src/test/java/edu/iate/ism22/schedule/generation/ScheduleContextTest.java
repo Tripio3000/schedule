@@ -19,10 +19,10 @@ class ScheduleContextTest extends ScheduleContextTestInitializer {
         
         ScheduleFTE fteService = new ScheduleFTE();
         List<User> users = new ArrayList<>();
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 60; i++) {
             users.add(new Operator("user" + i, scheme2by2));
         }
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 60; i++) {
             users.add(new Operator("user" + i, scheme5by2));
         }
         SchedulePopulationProvider provider = new SchedulePopulationProvider(
