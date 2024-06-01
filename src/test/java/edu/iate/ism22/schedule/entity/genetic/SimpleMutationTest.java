@@ -5,6 +5,7 @@ import edu.iate.ism22.schedule.entity.user.ScheduleActivity;
 import edu.iate.ism22.schedule.entity.user.User;
 import edu.iate.ism22.schedule.generation.ScheduleContextTestInitializer;
 import edu.iate.ism22.schedule.generation.utils.ScheduleFTE;
+import edu.iate.ism22.schedule.utils.LocalInterval;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -56,13 +57,12 @@ class SimpleMutationTest extends ScheduleContextTestInitializer {
             users.add(new Operator("user" + i, scheme2by2));
         }
         
-        SchedulePopulationProvider population = new SchedulePopulationProvider(
-            users,
-            LocalDateTime.parse("2024-03-01T00:00"),
-            LocalDateTime.parse("2024-04-01T00:00"),
-            fteService
-        );
+        SchedulePopulationProvider population = new SchedulePopulationProvider(fteService);
         
-        return population.createIndividuals(20);
+        LocalInterval interval = new LocalInterval(
+            LocalDateTime.parse("2024-03-01T00:00"),
+            LocalDateTime.parse("2024-04-01T00:00")
+        );
+        return population.createIndividuals(20, users, interval);
     }
 }

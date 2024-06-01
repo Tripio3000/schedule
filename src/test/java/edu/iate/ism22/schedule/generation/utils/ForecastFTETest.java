@@ -1,6 +1,7 @@
 package edu.iate.ism22.schedule.generation.utils;
 
 import edu.iate.ism22.schedule.entity.forecast.ForecastFTE;
+import edu.iate.ism22.schedule.utils.LocalInterval;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +22,12 @@ class ForecastFTETest {
     @Test
     void getForecastingFTE() {
         
-        Map<LocalDateTime, Integer> forecastingFTE = forecastFTE.getForecastingFTE();
-//        System.out.println(forecastingFTE);
+        LocalInterval interval = new LocalInterval(
+            LocalDateTime.parse("2024-01-01T00:00"),
+            LocalDateTime.parse("2024-02-01T00:00")
+        );
+        Map<LocalDateTime, Integer> forecastingFTE = forecastFTE.valueFor(interval);
+
         List<LocalDateTime> list = forecastingFTE.keySet().stream().sorted().toList();
         System.out.println(list);
     }

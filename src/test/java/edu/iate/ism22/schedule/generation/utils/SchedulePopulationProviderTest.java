@@ -5,6 +5,7 @@ import edu.iate.ism22.schedule.entity.genetic.SchedulePopulationProvider;
 import edu.iate.ism22.schedule.entity.user.Operator;
 import edu.iate.ism22.schedule.entity.user.User;
 import edu.iate.ism22.schedule.generation.ScheduleContextTestInitializer;
+import edu.iate.ism22.schedule.utils.LocalInterval;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -40,14 +41,17 @@ class SchedulePopulationProviderTest extends ScheduleContextTestInitializer {
         User user1 = new Operator("user1", scheme2by2);
         User user2 = new Operator("user2", scheme5by2);
         
-        SchedulePopulationProvider population = new SchedulePopulationProvider(
-            List.of(user1, user2),
-            LocalDateTime.parse("2024-01-01T00:00"),
-            LocalDateTime.parse("2024-02-01T00:00"),
-            fteService
-        );
+        SchedulePopulationProvider population = new SchedulePopulationProvider(fteService);
         
-        List<Future<ScheduleIndividual>> individuals = population.createIndividuals(POPULATION_CAPACITY);
+        LocalInterval localInterval = new LocalInterval(
+            LocalDateTime.parse("2024-01-01T00:00"),
+            LocalDateTime.parse("2024-02-01T00:00")
+        );
+        List<Future<ScheduleIndividual>> individuals = population.createIndividuals(
+            POPULATION_CAPACITY,
+            List.of(user1, user2),
+            localInterval
+        );
         return individuals;
     }
 }

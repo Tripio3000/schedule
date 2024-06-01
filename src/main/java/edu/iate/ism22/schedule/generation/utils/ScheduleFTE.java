@@ -11,10 +11,12 @@ import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
+import static edu.iate.ism22.schedule.generation.Constants.TIME_QUANT;
+
 @RequiredArgsConstructor
 public class ScheduleFTE {
     
-    private static final long FIFTEEN_MIN = 900000L;
+    private static final long FIFTEEN_MIN = TIME_QUANT * 60 * 1000;
     
     /**
      * В мапу Map<Long, Integer> fifteenMinSum записывается сумма фте для каждой 15-минутки.

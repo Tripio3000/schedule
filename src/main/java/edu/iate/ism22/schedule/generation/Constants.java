@@ -7,4 +7,6 @@ public class Constants {
     public static final Integer TOUR_SIZE = 2;
     public static final Double MUTATION_CHANCE = 0.1;
     public static final Integer CYCLES = 10;
+    // квант времени в минутах
+    public static final Integer TIME_QUANT = 60;
 }
