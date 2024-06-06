@@ -16,7 +16,7 @@ import static edu.iate.ism22.schedule.generation.Constants.TIME_QUANT;
 @RequiredArgsConstructor
 public class ScheduleFTE {
     
-    private static final long FIFTEEN_MIN = TIME_QUANT * 60 * 1000;
+    private static final long TIME_QUANT_MILLS = TIME_QUANT * 60 * 1000;
     
     /**
      * В мапу Map<Long, Integer> fifteenMinSum записывается сумма фте для каждой 15-минутки.
@@ -41,7 +41,7 @@ public class ScheduleFTE {
             int isWork = activity.isWork() ? 1 : 0;
             long startShift = activity.getStart().toInstant(ZoneOffset.ofHours(3)).toEpochMilli();
             long endShift = activity.getEnd().toInstant(ZoneOffset.ofHours(3)).toEpochMilli();
-            for (long i = startShift; i <= endShift; i += FIFTEEN_MIN) {
+            for (long i = startShift; i <= endShift; i += TIME_QUANT_MILLS) {
                 sumFte.merge(i, isWork, Integer::sum);
             }
         }

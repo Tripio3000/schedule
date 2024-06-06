@@ -66,9 +66,23 @@ public class ScheduleContextTestInitializer {
                 ),
                 new WorkShift(
                     List.of(
+                        new ScheduleVariant(work1, parse("08:00:00"), parse("12:00:00")),
+                        new ScheduleVariant(meal, parse("12:00:00"), parse("13:00:00")),
+                        new ScheduleVariant(work1, parse("13:00:00"), parse("17:00:00"))
+                    )
+                ),
+                new WorkShift(
+                    List.of(
                         new ScheduleVariant(work1, parse("09:00:00"), parse("13:00:00")),
                         new ScheduleVariant(meal, parse("13:00:00"), parse("14:00:00")),
                         new ScheduleVariant(work1, parse("14:00:00"), parse("18:00:00"))
+                    )
+                ),
+                new WorkShift(
+                    List.of(
+                        new ScheduleVariant(work1, parse("10:00:00"), parse("14:00:00")),
+                        new ScheduleVariant(meal, parse("14:00:00"), parse("15:00:00")),
+                        new ScheduleVariant(work1, parse("15:00:00"), parse("19:00:00"))
                     )
                 ),
                 new WorkShift(
@@ -96,9 +110,23 @@ public class ScheduleContextTestInitializer {
                 ),
                 new WorkShift(
                     List.of(
+                        new ScheduleVariant(work2, parse("02:00:00"), parse("08:00:00")),
+                        new ScheduleVariant(meal, parse("08:00:00"), parse("09:00:00")),
+                        new ScheduleVariant(work2, parse("09:00:00"), parse("15:00:00"))
+                    )
+                ),
+                new WorkShift(
+                    List.of(
                         new ScheduleVariant(work2, parse("04:00:00"), parse("10:00:00")),
                         new ScheduleVariant(meal, parse("10:00:00"), parse("11:00:00")),
                         new ScheduleVariant(work2, parse("11:00:00"), parse("17:00:00"))
+                    )
+                ),
+                new WorkShift(
+                    List.of(
+                        new ScheduleVariant(work2, parse("06:00:00"), parse("12:00:00")),
+                        new ScheduleVariant(meal, parse("12:00:00"), parse("13:00:00")),
+                        new ScheduleVariant(work2, parse("13:00:00"), parse("19:00:00"))
                     )
                 ),
                 new WorkShift(
@@ -110,6 +138,13 @@ public class ScheduleContextTestInitializer {
                 ),
                 new WorkShift(
                     List.of(
+                        new ScheduleVariant(work2, parse("10:00:00"), parse("16:00:00")),
+                        new ScheduleVariant(meal, parse("16:00:00"), parse("17:00:00")),
+                        new ScheduleVariant(work2, parse("17:00:00"), parse("23:00:00"))
+                    )
+                ),
+                new WorkShift(
+                    List.of(
                         new ScheduleVariant(work2, parse("12:00:00"), parse("18:00:00")),
                         new ScheduleVariant(meal, parse("18:00:00"), parse("19:00:00")),
                         new ScheduleVariant(work2, parse("19:00:00"), parse("01:00:00"))
@@ -117,9 +152,23 @@ public class ScheduleContextTestInitializer {
                 ),
                 new WorkShift(
                     List.of(
+                        new ScheduleVariant(work2, parse("14:00:00"), parse("20:00:00")),
+                        new ScheduleVariant(meal, parse("20:00:00"), parse("21:00:00")),
+                        new ScheduleVariant(work2, parse("21:00:00"), parse("03:00:00"))
+                    )
+                ),
+                new WorkShift(
+                    List.of(
                         new ScheduleVariant(work2, parse("16:00:00"), parse("22:00:00")),
                         new ScheduleVariant(meal, parse("22:00:00"), parse("23:00:00")),
                         new ScheduleVariant(work2, parse("23:00:00"), parse("05:00:00"))
+                    )
+                ),
+                new WorkShift(
+                    List.of(
+                        new ScheduleVariant(work2, parse("18:00:00"), parse("00:00:00")),
+                        new ScheduleVariant(meal, parse("00:00:00"), parse("01:00:00")),
+                        new ScheduleVariant(work2, parse("01:00:00"), parse("07:00:00"))
                     )
                 ),
                 new WorkShift(

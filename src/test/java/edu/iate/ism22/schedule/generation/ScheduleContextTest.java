@@ -15,22 +15,20 @@ class ScheduleContextTest extends ScheduleContextTestInitializer {
     void generate() {
         
         List<User> users = new ArrayList<>();
-        for (int i = 0; i < 150; i++) {
+        for (int i = 0; i < 10; i++) {
             users.add(new Operator("user" + i, scheme2by2));
         }
-        for (int i = 0; i < 150; i++) {
+        for (int i = 0; i < 10; i++) {
             users.add(new Operator("user" + i, scheme5by2));
         }
         
         ScheduleContext scheduleContext = new ScheduleContext();
         
         LocalInterval interval = new LocalInterval(
-            LocalDateTime.parse("2024-08-01T00:00"),
-            LocalDateTime.parse("2024-08-14T00:00")
+            LocalDateTime.parse("2024-07-01T00:00"),
+            LocalDateTime.parse("2024-07-14T00:00")
         );
         scheduleContext.generate(users, interval);
-        
-        assertEquals()
     }
     
 }

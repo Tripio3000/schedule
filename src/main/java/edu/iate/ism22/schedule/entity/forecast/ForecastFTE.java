@@ -33,7 +33,7 @@ public class ForecastFTE implements Forecast<Map<LocalDateTime, Integer>> {
             for (int i = 1; i <= rowCount; i++) {
                 Row row = sheet.getRow(i);
                 Cell keyCell = row.getCell(0);
-                Cell valueCell = row.getCell(3);
+                Cell valueCell = row.getCell(2);
                 
                 LocalDateTime dateTime = LocalDateTime.parse(keyCell.getStringCellValue(), formatter);
                 Integer value = (int) valueCell.getNumericCellValue();
