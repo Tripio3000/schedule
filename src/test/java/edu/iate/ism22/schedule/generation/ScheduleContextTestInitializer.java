@@ -1,28 +1,28 @@
 package edu.iate.ism22.schedule.generation;
 
 import edu.iate.ism22.schedule.entity.user.ScheduleContainer;
-import edu.iate.ism22.schedule.entity.user.ScheduleContainerDayOff;
 import edu.iate.ism22.schedule.entity.user.ScheduleContainerWorkday;
 import edu.iate.ism22.schedule.entity.user.ScheduleVariant;
-import edu.iate.ism22.schedule.entity.user.Scheme;
-import edu.iate.ism22.schedule.entity.user.SchemeImpl;
 import edu.iate.ism22.schedule.entity.user.WorkActivity;
 import edu.iate.ism22.schedule.entity.user.WorkShift;
-import edu.iate.ism22.schedule.utils.CircularLinkedList;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import static java.time.LocalTime.parse;
 
 public class ScheduleContextTestInitializer {
-    protected Scheme scheme2by2;
-    protected Scheme scheme5by2;
+//    protected Scheme scheme2by2;
+//    protected Scheme scheme5by2;
     private WorkActivity work1;
     private WorkActivity work2;
     private WorkActivity meal;
     private Random rand;
+    
+    protected ScheduleContainer container8h;
+    protected ScheduleContainer container12h;
     
     @BeforeEach
     void setUp() {
@@ -33,23 +33,26 @@ public class ScheduleContextTestInitializer {
         work2 = new WorkActivity("work2", true);
         meal = new WorkActivity("meal", false);
         
-        // Создаем схемы
-        CircularLinkedList<ScheduleContainer> circ2by2 = new CircularLinkedList<>(rand);
-        circ2by2.add(createWorkContainer2by2());
-        circ2by2.add(createWorkContainer2by2());
-        circ2by2.add(new ScheduleContainerDayOff());
-        circ2by2.add(new ScheduleContainerDayOff());
-        scheme2by2 = new SchemeImpl(circ2by2);
+        container8h = createWorkContainer5by2();
+        container12h = createWorkContainer2by2();
         
-        CircularLinkedList<ScheduleContainer> circ5by2 = new CircularLinkedList<>(rand);
-        circ5by2.add(createWorkContainer5by2());
-        circ5by2.add(createWorkContainer5by2());
-        circ5by2.add(createWorkContainer5by2());
-        circ5by2.add(createWorkContainer5by2());
-        circ5by2.add(createWorkContainer5by2());
-        circ5by2.add(new ScheduleContainerDayOff());
-        circ5by2.add(new ScheduleContainerDayOff());
-        scheme5by2 = new SchemeImpl(circ5by2);
+        // Создаем схемы
+//        CircularLinkedList<ScheduleContainer> circ2by2 = new CircularLinkedList<>(rand);
+//        circ2by2.add(createWorkContainer2by2());
+//        circ2by2.add(createWorkContainer2by2());
+//        circ2by2.add(new ScheduleContainerDayOff());
+//        circ2by2.add(new ScheduleContainerDayOff());
+//        scheme2by2 = new SchemeImpl(circ2by2);
+//
+//        CircularLinkedList<ScheduleContainer> circ5by2 = new CircularLinkedList<>(rand);
+//        circ5by2.add(createWorkContainer5by2());
+//        circ5by2.add(createWorkContainer5by2());
+//        circ5by2.add(createWorkContainer5by2());
+//        circ5by2.add(createWorkContainer5by2());
+//        circ5by2.add(createWorkContainer5by2());
+//        circ5by2.add(new ScheduleContainerDayOff());
+//        circ5by2.add(new ScheduleContainerDayOff());
+//        scheme5by2 = new SchemeImpl(circ5by2);
     }
     
     // на выбор смены по 9 часов: 07-16, 09-18, 11-20
@@ -57,6 +60,8 @@ public class ScheduleContextTestInitializer {
         return new ScheduleContainerWorkday(
             rand,
             List.of(
+                new WorkShift(Collections.emptyList()),
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work1, parse("07:00:00"), parse("11:00:00")),
@@ -101,6 +106,7 @@ public class ScheduleContextTestInitializer {
         return new ScheduleContainerWorkday(
             rand,
             List.of(
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work2, parse("00:00:00"), parse("06:00:00")),
@@ -108,6 +114,7 @@ public class ScheduleContextTestInitializer {
                         new ScheduleVariant(work2, parse("07:00:00"), parse("13:00:00"))
                     )
                 ),
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work2, parse("02:00:00"), parse("08:00:00")),
@@ -115,6 +122,7 @@ public class ScheduleContextTestInitializer {
                         new ScheduleVariant(work2, parse("09:00:00"), parse("15:00:00"))
                     )
                 ),
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work2, parse("04:00:00"), parse("10:00:00")),
@@ -122,6 +130,7 @@ public class ScheduleContextTestInitializer {
                         new ScheduleVariant(work2, parse("11:00:00"), parse("17:00:00"))
                     )
                 ),
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work2, parse("06:00:00"), parse("12:00:00")),
@@ -129,6 +138,7 @@ public class ScheduleContextTestInitializer {
                         new ScheduleVariant(work2, parse("13:00:00"), parse("19:00:00"))
                     )
                 ),
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work2, parse("08:00:00"), parse("14:00:00")),
@@ -136,6 +146,7 @@ public class ScheduleContextTestInitializer {
                         new ScheduleVariant(work2, parse("15:00:00"), parse("21:00:00"))
                     )
                 ),
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work2, parse("10:00:00"), parse("16:00:00")),
@@ -143,6 +154,7 @@ public class ScheduleContextTestInitializer {
                         new ScheduleVariant(work2, parse("17:00:00"), parse("23:00:00"))
                     )
                 ),
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work2, parse("12:00:00"), parse("18:00:00")),
@@ -150,6 +162,7 @@ public class ScheduleContextTestInitializer {
                         new ScheduleVariant(work2, parse("19:00:00"), parse("01:00:00"))
                     )
                 ),
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work2, parse("14:00:00"), parse("20:00:00")),
@@ -157,6 +170,7 @@ public class ScheduleContextTestInitializer {
                         new ScheduleVariant(work2, parse("21:00:00"), parse("03:00:00"))
                     )
                 ),
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work2, parse("16:00:00"), parse("22:00:00")),
@@ -164,6 +178,7 @@ public class ScheduleContextTestInitializer {
                         new ScheduleVariant(work2, parse("23:00:00"), parse("05:00:00"))
                     )
                 ),
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work2, parse("18:00:00"), parse("00:00:00")),
@@ -171,6 +186,7 @@ public class ScheduleContextTestInitializer {
                         new ScheduleVariant(work2, parse("01:00:00"), parse("07:00:00"))
                     )
                 ),
+                new WorkShift(Collections.emptyList()),
                 new WorkShift(
                     List.of(
                         new ScheduleVariant(work2, parse("20:00:00"), parse("02:00:00")),

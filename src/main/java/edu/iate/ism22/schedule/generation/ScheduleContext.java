@@ -24,8 +24,8 @@ import java.util.Map;
 
 public class ScheduleContext {
     
-    private static final Integer POPULATION_LIMIT = 20;
-    private static final Integer CYCLES = 30;
+    private static final Integer POPULATION_LIMIT = 500;
+    private static final Integer CYCLES = 1000;
     private static final Double ELITISM_RATE = 0.02;
     
     public ScheduleContext() {
@@ -39,13 +39,12 @@ public class ScheduleContext {
             0.97,
             new MutationImpl(),
             0.15,
-            new CustomTournamentSelection(5)
+            new CustomTournamentSelection(50)
         );
         
         Forecast<Map<LocalDateTime, Integer>> forecast = new CachedForecast(new ForecastFTE());
-        
+        Map<LocalDateTime, Integer> requestedForecast = forecast.valueFor(interval);
 //        int sum1 = forecast.valueFor(interval).entrySet().stream()
-//            .filter(entry -> entry.getKey().isAfter(interval.getStart()) && entry.getKey().isBefore(interval.getEnd()))
 //            .mapToInt(Map.Entry::getValue)
 //            .sum();
 //        System.out.println(sum1);
@@ -62,12 +61,13 @@ public class ScheduleContext {
         Population finalPopulation = ga.evolve(initialPopulation, stopCond);
 
         UserScheduleChromosome bestChromosome = (UserScheduleChromosome) finalPopulation.getFittestChromosome();
-
-
-        bestChromosome.getActualFte().entrySet().stream()
+        
+        
+        Map<LocalDateTime, Integer> bestChromosomeActualFte = bestChromosome.getActualFte();
+        requestedForecast.entrySet().stream()
             .sorted(Map.Entry.comparingByKey())
-            .forEach(entry -> System.out.println(entry.getKey() + " : " + entry.getValue()));
-
+            .forEach(entry -> System.out.println(entry.getKey() + " : " + entry.getValue() + " : " + bestChromosomeActualFte.get(entry.getKey())));
+        
 //        List<Integer> sortedValues = bestChromosome.getActualFte().entrySet().stream()
 //            .sorted(Map.Entry.comparingByKey())
 //            .map(Map.Entry::getValue)

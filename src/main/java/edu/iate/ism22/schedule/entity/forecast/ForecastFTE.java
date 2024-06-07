@@ -36,9 +36,10 @@ public class ForecastFTE implements Forecast<Map<LocalDateTime, Integer>> {
                 Cell valueCell = row.getCell(2);
                 
                 LocalDateTime dateTime = LocalDateTime.parse(keyCell.getStringCellValue(), formatter);
-                Integer value = (int) valueCell.getNumericCellValue();
-                dataMap.put(dateTime, value);
-                
+                if (!dateTime.isBefore(interval.getStart()) && dateTime.isBefore(interval.getEnd())) {
+                    Integer value = (int) valueCell.getNumericCellValue();
+                    dataMap.put(dateTime, value);
+                }
             }
             return dataMap;
         } catch (IOException e) {

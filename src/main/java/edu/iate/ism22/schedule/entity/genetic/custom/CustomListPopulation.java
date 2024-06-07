@@ -11,15 +11,13 @@ import org.apache.commons.math3.genetics.Population;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeSet;
 
 public abstract class CustomListPopulation implements Population {
     
-    private TreeSet<Chromosome> chromosomes;
-//    private List<Chromosome> chromosomes;
+//    private TreeSet<Chromosome> chromosomes;
+    private List<Chromosome> chromosomes;
     
     private int populationLimit;
     
@@ -41,8 +39,8 @@ public abstract class CustomListPopulation implements Population {
                 chromosomes.size(), populationLimit, false);
         }
         this.populationLimit = populationLimit;
-        this.chromosomes = new TreeSet<>(Comparator.comparingDouble(Chromosome::getFitness));
-//        this.chromosomes = new ArrayList<Chromosome>(populationLimit);
+//        this.chromosomes = new TreeSet<>(Comparator.comparingDouble(Chromosome::getFitness));
+        this.chromosomes = new ArrayList<Chromosome>(populationLimit);
         this.chromosomes.addAll(chromosomes);
     }
     
@@ -62,9 +60,9 @@ public abstract class CustomListPopulation implements Population {
         return new ArrayList<>(chromosomes);
     }
     
-    public TreeSet<Chromosome> getSortedChromosomes() {
-        return chromosomes;
-    }
+//    public TreeSet<Chromosome> getSortedChromosomes() {
+//        return chromosomes;
+//    }
     
     public void addChromosome(final Chromosome chromosome) throws NumberIsTooLargeException {
         if (chromosomes.size() >= populationLimit) {

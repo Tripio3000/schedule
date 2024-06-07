@@ -16,7 +16,7 @@ class ScheduleLineTest extends ScheduleContextTestInitializer {
     
     @Test
     void getScheduleLine() {
-        User user = new Operator("user1", scheme2by2);
+        User user = new Operator("user1", container12h);
         scheduleLine = new ScheduleLine(user, LocalDateTime.parse("2024-01-01T00:00"), LocalDateTime.parse("2024-02-01T00:00"));
         
         List<ScheduleActivity> activities = scheduleLine.getScheduleActivities();

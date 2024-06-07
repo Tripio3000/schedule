@@ -2,12 +2,11 @@ package edu.iate.ism22.schedule.entity.genetic;
 
 import edu.iate.ism22.schedule.entity.user.EmptyScheduleActivity;
 import edu.iate.ism22.schedule.entity.user.ScheduleActivity;
-import edu.iate.ism22.schedule.entity.user.ScheduleContainer;
 import edu.iate.ism22.schedule.entity.user.ScheduleVariant;
 import edu.iate.ism22.schedule.entity.user.User;
 import edu.iate.ism22.schedule.entity.user.WorkShift;
+import edu.iate.ism22.schedule.exception.EmptyScheduleContainer;
 import edu.iate.ism22.schedule.exception.GenerationIntervalException;
-import edu.iate.ism22.schedule.exception.ScheduleContainerNotFound;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -53,17 +52,15 @@ public class ScheduleLine {
         
         LocalDate currentDate = startDate;
         while (currentDate.isBefore(endDate)) {
-            if (user.getScheme().getContainers().isEmpty()) {
-                throw new ScheduleContainerNotFound("Schedule container not found.");
+            if (user.getScheduleContainer().getAllWorkShifts().isEmpty()) {
+                throw new EmptyScheduleContainer("Schedule container is empty.");
             }
-            for (ScheduleContainer container : user.getScheme().getContainers().getList()) {
-                
-                WorkShift nextShift = container.getRandomWorkShift();
-                if (nextShift.isWorkShift()) {
-                    fillScheduleLineWithWorkShift(scheduleLine, nextShift, currentDate);
-                }
-                currentDate = currentDate.plusDays(1);
+            
+            WorkShift nextShift = user.getScheduleContainer().getRandomWorkShift();
+            if (nextShift.isWorkShift()) {
+                fillScheduleLineWithWorkShift(scheduleLine, nextShift, currentDate);
             }
+            currentDate = currentDate.plusDays(1);
         }
         fillEmptyActivities(scheduleLine);
         
@@ -82,6 +79,9 @@ public class ScheduleLine {
     }
     
     private void fillEmptyActivities(List<ScheduleActivity> shifts) {
+        if (shifts.isEmpty()) {
+            shifts.add(new EmptyScheduleActivity(user, start, end));
+        }
         if (start.isBefore(shifts.getFirst().getStart())) {
             shifts.addFirst(new EmptyScheduleActivity(user, start, shifts.getFirst().getStart()));
         }

@@ -43,7 +43,7 @@ public class UserScheduleChromosome extends AbstractListChromosome<ScheduleLine>
         Map<LocalDateTime, Integer> actualFte = getActualFte();
         
         ScheduleLine firstLine = getRepresentation().getFirst();
-        LocalInterval requestedInterval = new LocalInterval(firstLine.getStart(), firstLine.getEnd());
+        LocalInterval requestedInterval = new LocalInterval(firstLine.getStart(), firstLine.getEnd().plusDays(2));
         
         Map<LocalDateTime, Integer> forecastFte = forecast.valueFor(requestedInterval);
         
@@ -54,9 +54,11 @@ public class UserScheduleChromosome extends AbstractListChromosome<ScheduleLine>
             if (currentActualFte == null || currentForecastFte == null) {
                 throw new IllegalArgumentException(currentActualFte + " - " + currentForecastFte);
             }
-            fit += Math.abs(currentActualFte - currentForecastFte) / (double) currentForecastFte;
+            fit += Math.pow((currentActualFte - currentForecastFte), 2);
+//            fit += Math.abs(currentActualFte - currentForecastFte);
+//            fit += Math.abs(currentActualFte - currentForecastFte) / (double) currentForecastFte;
         }
-        
+        fit = fit / actualFte.size();
         return fit;
     }
     

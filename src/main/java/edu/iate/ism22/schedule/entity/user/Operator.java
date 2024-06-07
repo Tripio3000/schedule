@@ -3,11 +3,11 @@ package edu.iate.ism22.schedule.entity.user;
 public class Operator implements User {
     
     private String login;
-    private Scheme scheme;
+    private ScheduleContainer scheduleContainer;
     
-    public Operator(String login, Scheme scheme) {
+    public Operator(String login, ScheduleContainer scheduleContainer) {
         this.login = login;
-        this.scheme = scheme;
+        this.scheduleContainer = scheduleContainer;
     }
     
     @Override
@@ -16,7 +16,7 @@ public class Operator implements User {
     }
     
     @Override
-    public Scheme getScheme() {
-        return scheme;
+    public ScheduleContainer getScheduleContainer() {
+        return scheduleContainer;
     }
 }
