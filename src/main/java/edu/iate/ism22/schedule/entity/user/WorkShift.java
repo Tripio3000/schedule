@@ -2,6 +2,7 @@ package edu.iate.ism22.schedule.entity.user;
 
 import lombok.Data;
 
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -15,5 +16,13 @@ public class WorkShift {
     
     public boolean isWorkShift() {
         return !activities.isEmpty();
+    }
+    
+    public LocalTime getStartTime() {
+        return activities.getFirst().getStart();
+    }
+    
+    public LocalTime getEndTime() {
+        return activities.getLast().getEnd();
     }
 }
