@@ -114,7 +114,7 @@ public class CustomGeneticAlgorithm {
                 nextGeneration.addChromosome(pair.getSecond());
             }
         }
-        System.out.println(nextGeneration.getFittestChromosome().fitness());
+        System.out.println(nextGeneration.getFittestChromosome().getFitness() + ",");
         return nextGeneration;
     }
     

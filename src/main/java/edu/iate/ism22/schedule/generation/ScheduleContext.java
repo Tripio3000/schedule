@@ -1,13 +1,17 @@
 package edu.iate.ism22.schedule.generation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import edu.iate.ism22.schedule.entity.dto.FteDTO;
+import edu.iate.ism22.schedule.entity.dto.UserScheduleDTO;
 import edu.iate.ism22.schedule.entity.forecast.CachedForecast;
 import edu.iate.ism22.schedule.entity.forecast.Forecast;
 import edu.iate.ism22.schedule.entity.forecast.ForecastFTE;
 import edu.iate.ism22.schedule.entity.genetic.ScheduleLine;
 import edu.iate.ism22.schedule.entity.genetic.custom.CustomElitisticListPopulation;
 import edu.iate.ism22.schedule.entity.genetic.custom.CustomGeneticAlgorithm;
-import edu.iate.ism22.schedule.entity.genetic.custom.CustomTournamentSelection;
 import edu.iate.ism22.schedule.entity.genetic.custom.MutationImpl;
+import edu.iate.ism22.schedule.entity.genetic.custom.RouletteWheelSelection;
 import edu.iate.ism22.schedule.entity.genetic.custom.UserScheduleChromosome;
 import edu.iate.ism22.schedule.entity.user.User;
 import edu.iate.ism22.schedule.utils.LocalInterval;
@@ -17,6 +21,8 @@ import org.apache.commons.math3.genetics.NPointCrossover;
 import org.apache.commons.math3.genetics.Population;
 import org.apache.commons.math3.genetics.StoppingCondition;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +30,15 @@ import java.util.Map;
 
 public class ScheduleContext {
     
-    private static final Integer POPULATION_LIMIT = 500;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    
+    private static final Integer POPULATION_LIMIT = 200;
     private static final Integer CYCLES = 1000;
-    private static final Double ELITISM_RATE = 0.02;
+    private static final Double MUTATION_RATE = 0.2;
+    private static final Double ELITISM_RATE = 0.01;
     
     public ScheduleContext() {
-    
+        objectMapper.registerModule(new JavaTimeModule());
     }
     
     public void generate(List<User> users, LocalInterval interval) {
@@ -38,42 +47,39 @@ public class ScheduleContext {
             new NPointCrossover<List<ScheduleLine>>(2),
             0.97,
             new MutationImpl(),
-            0.15,
-            new CustomTournamentSelection(50)
+            MUTATION_RATE,
+            new RouletteWheelSelection()
         );
         
         Forecast<Map<LocalDateTime, Integer>> forecast = new CachedForecast(new ForecastFTE());
         Map<LocalDateTime, Integer> requestedForecast = forecast.valueFor(interval);
-//        int sum1 = forecast.valueFor(interval).entrySet().stream()
-//            .mapToInt(Map.Entry::getValue)
-//            .sum();
-//        System.out.println(sum1);
+        
         Population initialPopulation = getInitialPopulation(users, interval, forecast);
-        UserScheduleChromosome initialChromosome = (UserScheduleChromosome) initialPopulation.getFittestChromosome();
-        initialChromosome.getActualFte().entrySet().stream()
-            .sorted(Map.Entry.comparingByKey())
-            .forEach(entry -> System.out.println(entry.getKey() + " : " + entry.getValue()));
-        System.out.println("Initial best fit: " + initialChromosome.fitness());
-
         StoppingCondition stopCond = new FixedGenerationCount(CYCLES);
-
-        System.out.println("Начало ген.алгоритма: ");
+        
+        // Начало гененетического алгоритма
+        long startTime = System.currentTimeMillis();
         Population finalPopulation = ga.evolve(initialPopulation, stopCond);
-
+        long endTime = System.currentTimeMillis();
+        long elapsedTime = endTime - startTime;
+        
+        // Получаем лучший вариант расписания, записываем в файл данные для построения графиков.
         UserScheduleChromosome bestChromosome = (UserScheduleChromosome) finalPopulation.getFittestChromosome();
+        fteChart(bestChromosome.getActualFte(), requestedForecast, interval);
+        scheduleChart(bestChromosome.getRepresentation());
         
-        
-        Map<LocalDateTime, Integer> bestChromosomeActualFte = bestChromosome.getActualFte();
-        requestedForecast.entrySet().stream()
-            .sorted(Map.Entry.comparingByKey())
-            .forEach(entry -> System.out.println(entry.getKey() + " : " + entry.getValue() + " : " + bestChromosomeActualFte.get(entry.getKey())));
-        
-//        List<Integer> sortedValues = bestChromosome.getActualFte().entrySet().stream()
-//            .sorted(Map.Entry.comparingByKey())
-//            .map(Map.Entry::getValue)
-//            .toList();
-//        System.out.println("Actual best fte: " + sortedValues);
         System.out.println("Actual best fit: " + bestChromosome.fitness());
+        System.out.println("time : " + elapsedTime);
+    }
+    
+    private void scheduleChart(List<ScheduleLine> scheduleLines) {
+        UserScheduleDTO scheduleDTO = new UserScheduleDTO(scheduleLines);
+        
+        try {
+            objectMapper.writeValue(new File("scheduleExp1.json"), scheduleDTO.getUserSchedules());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     
     private Population getInitialPopulation(List<User> users, LocalInterval interval, Forecast<Map<LocalDateTime, Integer>> forecast) {
@@ -90,4 +96,26 @@ public class ScheduleContext {
         return new CustomElitisticListPopulation(chromosomes, POPULATION_LIMIT, ELITISM_RATE);
     }
     
+    private void fteChart(Map<LocalDateTime, Integer> actualFte, Map<LocalDateTime, Integer> forecastFte, LocalInterval interval) {
+        
+        // исключаем точки, не входящие в запрошенный интервал
+        actualFte.entrySet().removeIf(entry -> entry.getKey().isBefore(interval.getStart()) || !entry.getKey().isBefore(interval.getEnd()));
+        
+        List<FteDTO> dtos = new ArrayList<>();
+        for (Map.Entry<LocalDateTime, Integer> entry : actualFte.entrySet()) {
+            dtos.add(
+                new FteDTO(
+                    entry.getKey(),
+                    entry.getValue(),
+                    forecastFte.getOrDefault(entry.getKey(), 0)
+                )
+            );
+        }
+        
+        try {
+            objectMapper.writeValue(new File("fte_chart.json"), dtos);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

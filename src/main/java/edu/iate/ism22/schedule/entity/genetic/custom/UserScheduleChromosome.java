@@ -34,7 +34,7 @@ public class UserScheduleChromosome extends AbstractListChromosome<ScheduleLine>
     }
     
     @Override
-    protected List<ScheduleLine> getRepresentation() {
+    public List<ScheduleLine> getRepresentation() {
         return super.getRepresentation();
     }
     
@@ -54,11 +54,22 @@ public class UserScheduleChromosome extends AbstractListChromosome<ScheduleLine>
             if (currentActualFte == null || currentForecastFte == null) {
                 throw new IllegalArgumentException(currentActualFte + " - " + currentForecastFte);
             }
+            
+            /**
+             * Подсчет fit по модулю разницы
+             * fit += Math.abs(currentActualFte - currentForecastFte);
+             */
+            
+            /**
+             * Подсчет fit по MAPE
+             * fit += Math.abs(currentActualFte - currentForecastFte) / (double) currentForecastFte;
+             */
+            
+            // подсчет fit по MSE
             fit += Math.pow((currentActualFte - currentForecastFte), 2);
-//            fit += Math.abs(currentActualFte - currentForecastFte);
-//            fit += Math.abs(currentActualFte - currentForecastFte) / (double) currentForecastFte;
         }
         fit = fit / actualFte.size();
+        
         return fit;
     }
     
