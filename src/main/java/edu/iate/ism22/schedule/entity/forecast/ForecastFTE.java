@@ -6,7 +6,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,9 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ForecastFTE implements Forecast<Map<LocalDateTime, Integer>> {
-    
-    @Value("${forecast.fte.path}")
-    private String filePath;
     
     @Override
     public Map<LocalDateTime, Integer> valueFor(LocalInterval interval) {

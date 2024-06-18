@@ -84,37 +84,34 @@ public class CustomGeneticAlgorithm {
     }
     
     public Population nextGeneration(final Population current) {
+        // создаем следующую популяцию
         Population nextGeneration = current.nextGeneration();
         
         RandomGenerator randGen = getRandomGenerator();
-        
         while (nextGeneration.getPopulationSize() < nextGeneration.getPopulationLimit()) {
-            // select parent chromosomes
+            
+            // производим отбор
             ChromosomePair pair = getSelectionPolicy().select(current);
             
-            // crossover?
+            // применяем кроссовер (скрещивание)
             if (randGen.nextDouble() < getCrossoverRate()) {
-                // apply crossover policy to create two offspring
                 pair = getCrossoverPolicy().crossover(pair.getFirst(), pair.getSecond());
             }
             
-            // mutation?
+            // применяем мутацию
             if (randGen.nextDouble() < getMutationRate()) {
-                // apply mutation policy to the chromosomes
                 pair = new ChromosomePair(
                     getMutationPolicy().mutate(pair.getFirst()),
-                    getMutationPolicy().mutate(pair.getSecond()));
+                    getMutationPolicy().mutate(pair.getSecond())
+                );
             }
             
-            // add the first chromosome to the population
+            // добавляем полученные хромосомы в новую популяцию
             nextGeneration.addChromosome(pair.getFirst());
-            // is there still a place for the second chromosome?
             if (nextGeneration.getPopulationSize() < nextGeneration.getPopulationLimit()) {
-                // add the second chromosome to the population
                 nextGeneration.addChromosome(pair.getSecond());
             }
         }
-        System.out.println(nextGeneration.getFittestChromosome().getFitness() + ",");
         return nextGeneration;
     }
     

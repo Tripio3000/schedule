@@ -1,12 +1,12 @@
 package edu.iate.ism22.schedule;
 
-import edu.iate.ism22.schedule.entity.user.Operator;
-import edu.iate.ism22.schedule.entity.user.ScheduleContainer;
-import edu.iate.ism22.schedule.entity.user.ScheduleContainerWorkday;
-import edu.iate.ism22.schedule.entity.user.ScheduleVariant;
-import edu.iate.ism22.schedule.entity.user.User;
-import edu.iate.ism22.schedule.entity.user.WorkActivity;
-import edu.iate.ism22.schedule.entity.user.WorkShift;
+import edu.iate.ism22.schedule.entity.genetic.gene.Operator;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleContainer;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleContainerWorkday;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleVariant;
+import edu.iate.ism22.schedule.entity.genetic.gene.User;
+import edu.iate.ism22.schedule.entity.genetic.gene.WorkActivity;
+import edu.iate.ism22.schedule.entity.genetic.gene.WorkShift;
 import edu.iate.ism22.schedule.generation.ScheduleContext;
 import edu.iate.ism22.schedule.utils.LocalInterval;
 import org.springframework.boot.CommandLineRunner;

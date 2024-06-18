@@ -1,10 +1,10 @@
 package edu.iate.ism22.schedule.generation;
 
-import edu.iate.ism22.schedule.entity.user.ScheduleContainer;
-import edu.iate.ism22.schedule.entity.user.ScheduleContainerWorkday;
-import edu.iate.ism22.schedule.entity.user.ScheduleVariant;
-import edu.iate.ism22.schedule.entity.user.WorkActivity;
-import edu.iate.ism22.schedule.entity.user.WorkShift;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleContainer;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleContainerWorkday;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleVariant;
+import edu.iate.ism22.schedule.entity.genetic.gene.WorkActivity;
+import edu.iate.ism22.schedule.entity.genetic.gene.WorkShift;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Collections;

@@ -1,6 +1,6 @@
 package edu.iate.ism22.schedule.entity.dto;
 
-import edu.iate.ism22.schedule.entity.user.ScheduleActivity;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleActivity;
 import lombok.Data;
 
 import java.time.LocalDateTime;

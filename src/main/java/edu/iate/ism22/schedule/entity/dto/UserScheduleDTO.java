@@ -1,6 +1,6 @@
 package edu.iate.ism22.schedule.entity.dto;
 
-import edu.iate.ism22.schedule.entity.genetic.ScheduleLine;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleLine;
 
 import java.util.List;
 import java.util.Map;

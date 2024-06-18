@@ -1,7 +1,7 @@
 package edu.iate.ism22.schedule.generation;
 
-import edu.iate.ism22.schedule.entity.user.Operator;
-import edu.iate.ism22.schedule.entity.user.User;
+import edu.iate.ism22.schedule.entity.genetic.gene.Operator;
+import edu.iate.ism22.schedule.entity.genetic.gene.User;
 import edu.iate.ism22.schedule.utils.LocalInterval;
 import org.junit.jupiter.api.Test;
 

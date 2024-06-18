@@ -1,8 +1,8 @@
 package edu.iate.ism22.schedule.entity.genetic.custom;
 
 import edu.iate.ism22.schedule.entity.forecast.Forecast;
-import edu.iate.ism22.schedule.entity.genetic.ScheduleLine;
-import edu.iate.ism22.schedule.entity.user.ScheduleActivity;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleActivity;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleLine;
 import edu.iate.ism22.schedule.utils.LocalInterval;
 import org.apache.commons.math3.genetics.AbstractListChromosome;
 import org.apache.commons.math3.genetics.InvalidRepresentationException;

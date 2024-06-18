@@ -1,7 +1,7 @@
 package edu.iate.ism22.schedule.entity.genetic.custom;
 
-import edu.iate.ism22.schedule.entity.genetic.ScheduleLine;
-import edu.iate.ism22.schedule.entity.user.User;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleLine;
+import edu.iate.ism22.schedule.entity.genetic.gene.User;
 import org.apache.commons.math3.exception.MathIllegalArgumentException;
 import org.apache.commons.math3.genetics.Chromosome;
 import org.apache.commons.math3.genetics.GeneticAlgorithm;

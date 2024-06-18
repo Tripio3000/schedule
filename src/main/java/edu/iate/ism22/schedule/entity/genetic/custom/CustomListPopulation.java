@@ -74,14 +74,13 @@ public abstract class CustomListPopulation implements Population {
     
     @Override
     public Chromosome getFittestChromosome() {
-        // best so far
         Chromosome bestChromosome = getChromosomeList().getFirst();
         for (Chromosome chromosome : getChromosomeList()) {
             if (chromosome.compareTo(bestChromosome) < 0) {
-                // better chromosome found
                 bestChromosome = chromosome;
             }
         }
+        
         return bestChromosome;
     }
     

@@ -1,9 +1,9 @@
 package edu.iate.ism22.schedule.generation.utils;
 
-import edu.iate.ism22.schedule.entity.genetic.ScheduleLine;
-import edu.iate.ism22.schedule.entity.user.Operator;
-import edu.iate.ism22.schedule.entity.user.ScheduleActivity;
-import edu.iate.ism22.schedule.entity.user.User;
+import edu.iate.ism22.schedule.entity.genetic.gene.Operator;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleActivity;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleLine;
+import edu.iate.ism22.schedule.entity.genetic.gene.User;
 import edu.iate.ism22.schedule.generation.ScheduleContextTestInitializer;
 import org.junit.jupiter.api.Test;
 

@@ -7,13 +7,13 @@ import edu.iate.ism22.schedule.entity.dto.UserScheduleDTO;
 import edu.iate.ism22.schedule.entity.forecast.CachedForecast;
 import edu.iate.ism22.schedule.entity.forecast.Forecast;
 import edu.iate.ism22.schedule.entity.forecast.ForecastFTE;
-import edu.iate.ism22.schedule.entity.genetic.ScheduleLine;
 import edu.iate.ism22.schedule.entity.genetic.custom.CustomElitisticListPopulation;
 import edu.iate.ism22.schedule.entity.genetic.custom.CustomGeneticAlgorithm;
 import edu.iate.ism22.schedule.entity.genetic.custom.MutationImpl;
 import edu.iate.ism22.schedule.entity.genetic.custom.RouletteWheelSelection;
 import edu.iate.ism22.schedule.entity.genetic.custom.UserScheduleChromosome;
-import edu.iate.ism22.schedule.entity.user.User;
+import edu.iate.ism22.schedule.entity.genetic.gene.ScheduleLine;
+import edu.iate.ism22.schedule.entity.genetic.gene.User;
 import edu.iate.ism22.schedule.utils.LocalInterval;
 import org.apache.commons.math3.genetics.Chromosome;
 import org.apache.commons.math3.genetics.FixedGenerationCount;
@@ -72,16 +72,6 @@ public class ScheduleContext {
         System.out.println("time : " + elapsedTime);
     }
     
-    private void scheduleChart(List<ScheduleLine> scheduleLines) {
-        UserScheduleDTO scheduleDTO = new UserScheduleDTO(scheduleLines);
-        
-        try {
-            objectMapper.writeValue(new File("scheduleExp1.json"), scheduleDTO.getUserSchedules());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
     private Population getInitialPopulation(List<User> users, LocalInterval interval, Forecast<Map<LocalDateTime, Integer>> forecast) {
         List<Chromosome> chromosomes = new ArrayList<>();
         
@@ -94,6 +84,16 @@ public class ScheduleContext {
         }
         
         return new CustomElitisticListPopulation(chromosomes, POPULATION_LIMIT, ELITISM_RATE);
+    }
+    
+    private void scheduleChart(List<ScheduleLine> scheduleLines) {
+        UserScheduleDTO scheduleDTO = new UserScheduleDTO(scheduleLines);
+        
+        try {
+            objectMapper.writeValue(new File("scheduleExp1.json"), scheduleDTO.getUserSchedules());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     
     private void fteChart(Map<LocalDateTime, Integer> actualFte, Map<LocalDateTime, Integer> forecastFte, LocalInterval interval) {

@@ -1,10 +1,5 @@
-package edu.iate.ism22.schedule.entity.genetic;
+package edu.iate.ism22.schedule.entity.genetic.gene;
 
-import edu.iate.ism22.schedule.entity.user.EmptyScheduleActivity;
-import edu.iate.ism22.schedule.entity.user.ScheduleActivity;
-import edu.iate.ism22.schedule.entity.user.ScheduleVariant;
-import edu.iate.ism22.schedule.entity.user.User;
-import edu.iate.ism22.schedule.entity.user.WorkShift;
 import edu.iate.ism22.schedule.exception.EmptyScheduleContainer;
 import edu.iate.ism22.schedule.exception.GenerationIntervalException;
 import lombok.Getter;
@@ -13,34 +8,24 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public class ScheduleLine {
     private final User user;
     private final LocalDateTime start;
     private final LocalDateTime end;
     
-    private List<ScheduleActivity> cached = new ArrayList<>();
+    private List<ScheduleActivity> scheduleActivities = new ArrayList<>();
     
     public List<ScheduleActivity> getScheduleActivities() {
-        if (cached.isEmpty()) {
-            cached = generateScheduleLine();
+        if (scheduleActivities.isEmpty()) {
+            scheduleActivities = generateScheduleLine();
         }
-        return cached;
+        return scheduleActivities;
     }
     
-    public void clearCache() {
-        cached = Collections.emptyList();
-    }
-    
-    /**
-     * В соответствии со схемой пользователя достаем контейнер смен пользователя из контейнера смен
-     * Берем случайную смену на каждый день
-     * Дополняем промежутки между сменами пустой активностью.
-     */
     private List<ScheduleActivity> generateScheduleLine() {
         if (start.isAfter(end)) {
             throw new GenerationIntervalException("Start date is after end date.");

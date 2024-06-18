@@ -1,4 +1,4 @@
-package edu.iate.ism22.schedule.entity.user;
+package edu.iate.ism22.schedule.entity.genetic.gene;
 
 import java.time.LocalDateTime;
 
