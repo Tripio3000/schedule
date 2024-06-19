@@ -12,6 +12,7 @@ import edu.iate.ism22.schedule.utils.LocalInterval;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ import java.util.Random;
 
 import static java.time.LocalTime.parse;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class ScheduleApplication implements CommandLineRunner {
 	
 	private WorkActivity work1;
@@ -45,7 +46,7 @@ public class ScheduleApplication implements CommandLineRunner {
 //        for (int i = 0; i < 10; i++) {
 //            users.add(new Operator("user" + i, container8h));
 //        }
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 19; i++) {
 			users.add(new Operator("user" + i, container12h));
 		}
 		

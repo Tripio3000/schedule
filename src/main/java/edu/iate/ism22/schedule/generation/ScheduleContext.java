@@ -2,6 +2,7 @@ package edu.iate.ism22.schedule.generation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import edu.iate.ism22.schedule.dto.FteDTO;
 import edu.iate.ism22.schedule.dto.UserScheduleDTO;
 import edu.iate.ism22.schedule.entity.forecast.CachedForecast;
 import edu.iate.ism22.schedule.entity.forecast.Forecast;
@@ -36,12 +37,15 @@ import java.util.stream.Collectors;
 
 public class ScheduleContext {
     
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    
     private static final Integer POPULATION_LIMIT = 200;
     private static final Integer CYCLES = 1000;
     private static final Double ELITISM_RATE = 0.01;
+    private static final Double MUTATION_RATE = 0.25;
     
     public ScheduleContext() {
-    
+        objectMapper.registerModule(new JavaTimeModule());
     }
     
     public void generate(List<User> users, LocalInterval interval) throws IOException {
@@ -50,42 +54,57 @@ public class ScheduleContext {
             new NPointCrossover<>(2),
             0.97,
             new MutationImpl(),
-            0.2,
+            MUTATION_RATE,
             new RouletteWheelSelection()
         );
         
+        // получение прогноза
         Forecast<Map<LocalDateTime, Integer>> forecast = new CachedForecast(new ForecastFTE());
         Map<LocalDateTime, Integer> requestedForecast = forecast.valueFor(interval);
-//        int sum1 = forecast.valueFor(interval).entrySet().stream()
-//            .mapToInt(Map.Entry::getValue)
-//            .sum();
-//        System.out.println(sum1);
+        
         Population initialPopulation = getInitialPopulation(users, interval, forecast);
-        
-        // вывод на экран фте и фита начальной хромосомы
-        UserScheduleChromosome initialChromosome = (UserScheduleChromosome) initialPopulation.getFittestChromosome();
-        
-        System.out.println("Начало ген.алгоритма: ");
         StoppingCondition stopCond = new FixedGenerationCount(CYCLES);
-        Population finalPopulation = ga.evolve(initialPopulation, stopCond);
         
-        // вывод на экран фте и фита лучшей хромосомы
+        // начало генетического алгоритма
+        long startTime = System.currentTimeMillis();
+        Population finalPopulation = ga.evolve(initialPopulation, stopCond);
+        long endTime = System.currentTimeMillis();
+        long elapsedTime = endTime - startTime;
+        
+        // получаем лучший вариант расписания, записываем в файл данные для построения графиков.
         UserScheduleChromosome bestChromosome = (UserScheduleChromosome) finalPopulation.getFittestChromosome();
         Map<LocalDateTime, Integer> bestChromosomeActualFte = bestChromosome.getActualFte(interval);
-        requestedForecast.entrySet().stream()
-            .sorted(Map.Entry.comparingByKey())
-            .forEach(entry -> System.out.println(entry.getKey() + " : " + entry.getValue() + " : " + bestChromosomeActualFte.get(entry.getKey())));
-        
-        Map<User, List<ScheduleActivity>> userListMap = completeSchedule(bestChromosome.getRepresentation(), interval);
-        UserScheduleDTO dto = new UserScheduleDTO(userListMap);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.writeValue(new File("schedule.json"), dto.getUserSchedules());
+        fteChart(bestChromosomeActualFte, requestedForecast, interval);
+        scheduleChart(bestChromosome.getRepresentation(), interval);
         
         System.out.println("Actual best fit: " + bestChromosome.fitness());
+        System.out.println("time : " + elapsedTime);
     }
     
-    private Map<User, List<ScheduleActivity>> completeSchedule(List<DaySchedule> representation, LocalInterval interval) {
+    private Population getInitialPopulation(List<User> users, LocalInterval interval, Forecast<Map<LocalDateTime, Integer>> forecast) {
+        List<Chromosome> chromosomes = new ArrayList<>();
+        
+        LocalDate startDay = interval.getStart().toLocalDate();
+        LocalDate endDate = interval.getEnd().toLocalDate();
+        for (int i = 0; i < POPULATION_LIMIT; i++) {
+            
+            List<DaySchedule> representation = new ArrayList<>(
+                (int) ChronoUnit.DAYS.between(startDay, endDate)
+            );
+            
+            LocalDate currentDay = startDay;
+            while (currentDay.isBefore(endDate)) {
+                representation.add(new DaySchedule(currentDay, users));
+                currentDay = currentDay.plusDays(1);
+            }
+            
+            chromosomes.add(new UserScheduleChromosome(representation, forecast));
+        }
+        
+        return new CustomElitisticListPopulation(chromosomes, POPULATION_LIMIT, ELITISM_RATE);
+    }
+    
+    private void scheduleChart(List<DaySchedule> representation, LocalInterval interval) {
         
         // формируем итоговый вариант расписания (из List<DaySchedule> в List<ScheduleActivity>).
         List<ScheduleActivity> schedule = new ArrayList<>();
@@ -126,13 +145,36 @@ public class ScheduleContext {
                 )
             );
         
-        return scheduleByUser;
-        // вывод на экран итогового варианта расписания.
-//        scheduleByUser.forEach((key, value) -> {
-//            for (ScheduleActivity scheduleActivity : value) {
-//                System.out.println(key.getLogin() + " : " + scheduleActivity.getWorkActivity().getName() + " - " + scheduleActivity.getStart() + " - " + scheduleActivity.getEnd());
-//            }
-//        });
+        // запись данных в файл
+        UserScheduleDTO dto = new UserScheduleDTO(scheduleByUser);
+        try {
+            objectMapper.writeValue(new File("schedule.json"), dto.getUserSchedules());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private void fteChart(Map<LocalDateTime, Integer> actualFte, Map<LocalDateTime, Integer> forecastFte, LocalInterval interval) {
+        
+        // исключаем точки, не входящие в запрошенный интервал
+        actualFte.entrySet().removeIf(entry -> entry.getKey().isBefore(interval.getStart()) || !entry.getKey().isBefore(interval.getEnd()));
+        
+        List<FteDTO> dtos = new ArrayList<>();
+        for (Map.Entry<LocalDateTime, Integer> entry : actualFte.entrySet()) {
+            dtos.add(
+                new FteDTO(
+                    entry.getKey(),
+                    entry.getValue(),
+                    forecastFte.getOrDefault(entry.getKey(), 0)
+                )
+            );
+        }
+        
+        try {
+            objectMapper.writeValue(new File("fte_chart.json"), dtos);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     
     private List<ScheduleActivity> fillEmptyActivities(List<ScheduleActivity> activities, LocalInterval interval) {
@@ -162,28 +204,4 @@ public class ScheduleContext {
         
         return activities;
     }
-    
-    private Population getInitialPopulation(List<User> users, LocalInterval interval, Forecast<Map<LocalDateTime, Integer>> forecast) {
-        List<Chromosome> chromosomes = new ArrayList<>();
-        
-        LocalDate startDay = interval.getStart().toLocalDate();
-        LocalDate endDate = interval.getEnd().toLocalDate();
-        for (int i = 0; i < POPULATION_LIMIT; i++) {
-            
-            List<DaySchedule> representation = new ArrayList<>(
-                (int) ChronoUnit.DAYS.between(startDay, endDate)
-            );
-            
-            LocalDate currentDay = startDay;
-            while (currentDay.isBefore(endDate)) {
-                representation.add(new DaySchedule(currentDay, users));
-                currentDay = currentDay.plusDays(1);
-            }
-            
-            chromosomes.add(new UserScheduleChromosome(representation, forecast));
-        }
-        
-        return new CustomElitisticListPopulation(chromosomes, POPULATION_LIMIT, ELITISM_RATE);
-    }
-    
 }
